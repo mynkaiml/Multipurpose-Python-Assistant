@@ -1,0 +1,6 @@
+pyttsx3
+pywhatkit
+pyjokes
+wikipedia
+chatterbot==1.0.5
+spacy
