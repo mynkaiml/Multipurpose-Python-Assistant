@@ -5,6 +5,7 @@ import pyttsx3
 import pywhatkit
 import pyjokes
 import random
+import geocoder  # 📍 for location
 
 # 💬 Chatbot imports
 from chatterbot import ChatBot
@@ -192,6 +193,29 @@ class VirtualAssistant:
         print(time_info)
         self.speak(f"The current time is {current_time} and today is {current_date}")
 
+    # ---------- Get My Location ----------
+    def get_location(self):
+        try:
+            self.speak("Fetching your current location...")
+            g = geocoder.ip('me')
+            if g.ok:
+                city = g.city or "Unknown city"
+                state = g.state or "Unknown state"
+                country = g.country or "Unknown country"
+                lat, lng = g.latlng if g.latlng else ("Unknown", "Unknown")
+
+                location_info = f"""
+📍 You are currently in {city}, {state}, {country}.
+🌐 Latitude: {lat}, Longitude: {lng}
+                """
+                print(location_info)
+                self.speak(f"You are in {city}, {state}, {country}. Your coordinates are latitude {lat} and longitude {lng}.")
+            else:
+                self.speak("Sorry, I couldn't fetch your location right now.")
+        except Exception as e:
+            print(f"Error: {e}")
+            self.speak("An error occurred while getting your location.")
+
     # ---------- Joke Teller ----------
     def tell_joke(self):
         print("\n" + "=" * 30)
@@ -205,8 +229,6 @@ class VirtualAssistant:
         except Exception as e:
             self.speak("I'm out of jokes right now!")
             print(f"Error: {e}")
-        
-        
 
     # ---------- Banking System ----------
     def bank_menu(self):
@@ -279,10 +301,11 @@ class VirtualAssistant:
             print("5. Youtube")
             print("6. Date and Time")
             print("7. Tell a Joke")
-            print("8. Chatbot Mode 💬")
-            print("9. Exit")
+            print("8. Get My Location 📍")
+            print("9. Chatbot Mode 💬")
+            print("10. Exit")
 
-            main_choice = input("Enter your choice (1-9): ")
+            main_choice = input("Enter your choice (1-10): ")
 
             if main_choice == '1':
                 self.open_app()
@@ -299,12 +322,14 @@ class VirtualAssistant:
             elif main_choice == '7':
                 self.tell_joke()
             elif main_choice == '8':
-                self.chatbot_mode()
+                self.get_location()
             elif main_choice == '9':
+                self.chatbot_mode()
+            elif main_choice == '10':
                 self.speak("Exiting the program. Goodbye!")
                 break
             else:
-                self.speak("Invalid input. Please enter between 1 and 9.")
+                self.speak("Invalid input. Please enter between 1 and 10.")
 
 
 # ---------- Run Program ----------
